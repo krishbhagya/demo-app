@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Spice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.Map;
 public class SpiceServiceController {
 
     private static Map<Integer, Spice> spiceRepo = new HashMap<>();
+   Logger logger = LoggerFactory.getLogger(SpiceServiceController.class);
 
     static {
         Spice chiliPowder = new Spice();
@@ -28,21 +31,22 @@ public class SpiceServiceController {
 
     }
 
-    @RequestMapping(value="/spices")
+    @RequestMapping(value="/demo")
     public ResponseEntity<Object> getSpice(){
         return new ResponseEntity<>(spiceRepo.values(), HttpStatus.OK);
 
     }
 
-    @RequestMapping(value="/spices", method= RequestMethod.POST)
+    @RequestMapping(value="/demo", method= RequestMethod.POST)
     public ResponseEntity<Object>createSpice(@RequestBody Spice spice){
         spiceRepo.put(spice.getSpiceId(), spice);
+       logger.info("************* Spice details: " + spice.getName());
 
         return new ResponseEntity<>("Spice is created successfully", HttpStatus.CREATED);
 
     }
 
-    @RequestMapping(value="/spices/{spiceId}", method= RequestMethod.PUT)
+    @RequestMapping(value="/demo/{spiceId}", method= RequestMethod.PUT)
     public ResponseEntity<Object> updateSpice(@PathVariable("spiceId") int spiceId, @RequestBody Spice spice) {
         spiceRepo.remove(spiceId);
         spice.setSpiceId(spiceId);
@@ -52,14 +56,10 @@ public class SpiceServiceController {
         return new ResponseEntity<>("Product is updated successsfully", HttpStatus.OK);
     }
 
-    @RequestMapping(value="/spices/{spiceId}", method= RequestMethod.DELETE)
+    @RequestMapping(value="/demo/{spiceId}", method= RequestMethod.DELETE)
     public ResponseEntity<Object> deleteSpice(@PathVariable("spiceId") int spiceId){
         spiceRepo.remove(spiceId);
         return new ResponseEntity<>("Product is deleted successsfully", HttpStatus.OK);
 
     }
-
-
-
-
 }
